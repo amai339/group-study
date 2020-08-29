@@ -1,0 +1,2 @@
+0ysZh5m54oSfoWSR
+mongodb+srv://user:<password>@test.sowl7.mongodb.net/<dbname>?retryWrites=true&w=majority

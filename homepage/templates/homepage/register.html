@@ -1,0 +1,26 @@
+{% extends 'homepage/login_base.html' %}
+{% block nav_bar %}
+<ul class='navbar-nav ml-auto'>
+<a class="nav-item nav-link active" href="/homepage/register/">Register</a>
+<a class="nav-item nav-link" href="/homepage/login">Login</a>
+</ul>
+
+{% endblock %}
+
+
+{% block title %} Register {% endblock %}
+
+{% block main %}
+<h1 style="text-align:center">Create an account</h1><br>
+{% if error_message %}
+    <p><strong>{{error_message }}</strong></p>
+{% endif %}
+<form action = "/homepage/register/" method="post">
+    {% csrf_token %}
+    {% include "homepage/form_template.html" %}
+    {% block base_form %} {% endblock %}
+        <div class = "wrapper" style = "text-align: center">
+      <button type="submit" class="btn btn-success" style="width:30%">Register</button>
+        </div>
+</form>
+{% endblock %}

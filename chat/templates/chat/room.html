@@ -1,0 +1,91 @@
+<!-- chat/templates/chat/room.html -->
+{% load static %}
+<!DOCTYPE html>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Room</title>
+</head>
+<body>
+<style>
+    textarea {
+        resize: none;
+
+    }
+    .coding {
+        border-bottom: 1px dashed #ccc;
+    }
+    .textrea{
+        width: 200px;
+        height: 50px;
+    }
+</style>
+<textarea readonly id="messageCanvas" cols="100" rows="15">
+    
+</textarea>
+<input id="chat-message-input" type="text" size="88">
+<input id="chat-message-submit" type="button" value="Send" class="btn btn-primary">
+<input id="user" type="hidden" name="username" value="{{user_name}}">
+{{ room_name|json_script:"room-name" }}
+{{ user_name|json_script:"user-name" }}
+<script src="{% static 'reconnecting-websocket.js' %}"></script>
+<script>
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    const username = JSON.parse(document.getElementById('user-name').textContent);
+    var wsStart = 'ws://';
+    if (window.location.protocol == 'https:') {
+        wsStart = 'wss://';
+    }
+    var endpoint = wsStart + window.location.host + '/ws/chat/' + roomName + '/';
+    var chatSocket = new ReconnectingWebSocket(endpoint);
+    chatSocket.onopen = function (e) {
+        fetchMessages();
+    }
+
+    chatSocket.onmessage = function (e) {
+        var data = JSON.parse(e.data);
+        if (data['command'] === 'messages') {
+            for (let i = 0; i < data['messages'].length; i++) {
+                createMessage(data['messages'][i]);
+            }
+        } else if (data['command'] === 'new_message') {
+            createMessage(data['message']);
+        }
+    };
+
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+    document.querySelector('#chat-message-input').onkeyup = function (e) {
+        if (e.key === 'Enter') {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+    document.querySelector('#chat-message-submit').onclick = function (e) {
+        var messageInputDom = document.getElementById('chat-message-input');
+        var message = messageInputDom.value;
+        if (message != '') {
+            chatSocket.send(JSON.stringify({
+                'command': 'new_message',
+                'message': message,
+                'from': username
+            }));
+            messageInputDom.value = '';
+        }
+    };
+    function fetchMessages() {
+        chatSocket.send(JSON.stringify({'command': 'fetch_messages'}));
+    }
+    function createMessage(data) {
+        var author = data['author'];
+        var message = data['content'];
+        document.querySelector('#messageCanvas').append('\n'+author + ': ' + message);
+        // $('#messageCanvas').append(coding)
+        document.getElementById("messageCanvas").scrollTop = document.getElementById("messageCanvas").scrollHeight;
+
+    }
+</script>
+</body>
+</html>

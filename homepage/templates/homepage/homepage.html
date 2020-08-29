@@ -1,0 +1,19 @@
+{% extends "homepage/base.html" %}
+
+{% block title %} Homepage {% endblock %}
+
+{% block nav_bar %}
+<a class="nav-item nav-link" href="/homepage/lobby/">Lobby</a>
+<a class="nav-item nav-link" href="/homepage/logout/">Logout</a>
+<a class="nav-item nav-link" href="/homepage/create_room/">Create Room</a>
+{% endblock %}
+
+{% block body %}
+<body>
+<h2>HOMEPAGE</h2>
+<p>Something will be in here</p>
+<p>This is the home page of user <strong>{{user}}</strong></p>
+<a href= "/homepage/logout/">Logout here</a>
+</body>
+</html>
+{% endblock %}

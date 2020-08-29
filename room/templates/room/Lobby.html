@@ -1,0 +1,169 @@
+{% extends "homepage/base.html" %}
+
+{% block title %} Lobby {% endblock %}
+
+{% block nav_bar %}
+<ul class="navbar-nav mr-auto">
+<a class="nav-item nav-link active" href="/room/lobby">Lobby</a>
+<a class="nav-item nav-link" href="/room/create_room/">Create A Room</a>
+</ul>
+<ul class="navbar-nav ml-auto">
+<a class="nav-item nav-link" href="/homepage/logout/">Logout</a>
+</ul>
+{% endblock %}
+
+{% block body %}
+<!--- <h1 class="display-4">Welcome,  {{user}}</h1> -->
+<div class='container'>
+<div class="jumbotron rounded">
+  <div class="container">
+    <h1 class="display-4">Welcome, {{user}}</h1>
+    <p class="lead">This is the Lobby,  here you can access or accept room invites</p>
+  </div>
+</div>
+
+
+<u><h1 class="col-md-4"> Current Rooms</h1></u>
+
+<div class=" container row ">
+    {% for room in current_room %}
+    <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{room.name}}</h5>
+                <p class="card-text">{{room.description}}</p>
+                <a href="/room/{{room.id}}/"    class="btn btn-primary">Go To Room</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% if current_room.has_other_pages %}
+<nav aria-label="Accepted Rooms col-md-4" class="col-md-4 mt-3">
+    <ul class="pagination col-md-4">
+        {% if current_room.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?c_page=1">First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?c_page={{ current_room.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="#">{{ current_room.number }}</a>
+        </li>
+        {% if current_room.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?c_page={{ current_room.next_page_number }}">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?c_page={{ current_room.paginator.num_pages }}">Last</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+
+<u><h1 class="col-md-4">Invited Rooms</h1></u>
+<div class=" container row ">
+
+    {% for room in invited_room %}
+    <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{room.name}}</h5>
+                <p class="card-text">{{room.description}}</p>
+                <a href="/room/{{room.id}}/"    class="btn btn-outline-success">Accept</a>
+                <a href = "/room/decline/{{room.id}}/" class="btn btn-outline-danger">Decline</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% if invited_room.has_other_pages %}
+<nav aria-label="Accepted Rooms col-md-4" class="col-md-4 mt-3">
+    <ul class="pagination col-md-4">
+        {% if invited_room.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?i_page=1">First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?i_page={{ invited_room.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="#">{{ invited_room.number }}</a>
+        </li>
+        {% if public_room.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?i_page={{ invited_room.next_page_number }}">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?i_page={{ invited_room.paginator.num_pages }}">Last</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+
+
+<!-- Space for public room -->
+<u><h1 class="col-md-4 mt-3"> Public Rooms</h1></u>
+
+<div class=" container row ">
+
+    {% for room in public_room %}
+    <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{room.name}}</h5>
+                <p class="card-text">{{room.description}}</p>
+                <a href="/room/{{room.id}}/"    class="btn btn-primary">Go To Room</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% if public_room.has_other_pages %}
+<nav aria-label="Accepted Rooms col-md-4" class="col-md-4 mt-3">
+    <ul class="pagination col-md-4">
+        {% if public_room.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?p_page=1">First</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?p_page={{ public_room.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+            <a class="page-link" href="#">{{ public_room.number }}</a>
+        </li>
+        {% if public_room.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?p_page={{ public_room.next_page_number }}">Next</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?p_page={{ public_room.paginator.num_pages }}">Last</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+</nav>
+{% endif %}
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
