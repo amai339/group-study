@@ -2,7 +2,7 @@
 ## Web Application for people to group study. Features document organization/editing, with group text chatting.
 Deployed Web Application: https://gswebsite.herokuapp.com
 
-### Instalation instructions
+### Installation instructions
 ```
 pip install -r requirements.txt
 python manage.py makemigrations
